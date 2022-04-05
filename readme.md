@@ -42,7 +42,7 @@ scons -j16
 *Scons* will create `./test` as a result of build process. So
 
 ```bash
-./hello
+./test
 ```
 
 will run the *WebSocket* starter project.
