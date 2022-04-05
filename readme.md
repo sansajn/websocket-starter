@@ -1,6 +1,6 @@
 # WebSockets starter project
 
-C++ WebSocket starter template for easy prototyping on *Ubuntu 20.04 LTS with Scons build system. As usualy just three simple steps *setup*, *clone* and *buil & run* and we are ready to start experiment with WebSockets. So let's dive in
+C++ WebSocket starter template for easy prototyping on *Ubuntu 20.04 LTS* with Scons build system. As usualy just three simple steps *setup*, *clone* and *buil & run* and we are ready to start experiment with WebSockets. So let's dive in
 
 > if you are not yet familiar with SCons watch out [SCons starter][scons-starter] tutorial
 
