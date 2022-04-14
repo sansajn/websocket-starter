@@ -46,7 +46,7 @@ private:
 	connected_handler _connected_handler;
 };
 
-//! WebSocket server channel implementation for communication with a group of connected clients.
+//! WebSocket server 1:N channel implementation for communication with a group of connected clients.
 class server_channel : private boost::noncopyable {
 public:
 	server_channel();

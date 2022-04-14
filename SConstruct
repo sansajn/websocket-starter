@@ -5,4 +5,10 @@ cpp17 = Environment(
 
 cpp17.ParseConfig('pkg-config --cflags --libs libsoup-2.4')
 
-cpp17.Program(['test.cpp', 'websocket.cpp', 'glib_event_loop.cpp', 'echo_server.cpp'])
+wsch_objs = cpp17.Object(['websocket.cpp', 'glib_event_loop.cpp', 'echo_server.cpp'])
+
+# unit tests
+cpp17.Program(['test.cpp', wsch_objs])
+
+# samples
+cpp17.Program(['eserv.cpp', wsch_objs])

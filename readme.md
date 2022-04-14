@@ -30,25 +30,34 @@ command which creates `test` directory with `libsoup/ws_channel` subdirectory wi
 
 ## 3. build & run
 
-To start a build process go to `test/libsoup/ws_channel` subdirectory and run `scons`
+To start a build process run `scons`
 
 ```bash
-cd test/libsoup/ws_channel
 scons -j16
 ```
 
 > we can speed up building with `-jN` argument where `N` is number of available cores/threads
 
-*Scons* will create `./test` as a result of build process. So
+Currently two programs are produced, `eserv` (WebSocket echo server sample) and `test` (library unit tests).
 
-```bash
-./test
+To play with echo server sample, run
+
+```console
+$ ./eserv 
+glib event loop created
+listenning on ws://localhost:41001/test WebSocket address
+press ctrl+c to quit
 ```
 
-will run the *WebSocket* starter project.
+and open `websocket.html` file in a web-browser window and you should see
 
+```
+- WebSocket is supported by your Browser!
+- ws << John
+- ws >> John
+```
 
-> TODO: use echo server sample as starter sample and not unit tests
+on the page if everithing is working.
 
 We are done, feel free to modify ...
 

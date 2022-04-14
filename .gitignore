@@ -1,3 +1,15 @@
-/.qtc_clangd
+/.sconsign.dblite
 *.o
 /test
+/eserv
+
+# creator project files
+/.qtc_clangd
+/*.cflags
+/*.config
+/*.creator
+/*.creator.user
+/*.cxxflags
+/*.files
+/*.includes
+

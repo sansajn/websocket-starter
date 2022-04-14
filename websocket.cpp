@@ -133,7 +133,7 @@ server_channel::~server_channel() {
 		g_object_unref(G_OBJECT(client));
 
 	soup_server_disconnect(_server);
-	soup_server_remove_handler(_server, "/echo");  // TODO: what is /echo?
+	soup_server_remove_handler(_server, "/echo");  // FIXME: what is /echo?
 	g_object_unref(G_OBJECT(_server));
 }
 
@@ -166,7 +166,7 @@ void server_channel::message_handler(SoupWebsocketConnection * connection,
 			gsize size = 0;
 			gchar * str = (gchar *)g_bytes_get_data((GBytes *)message, &size);
 			assert(str);
-			on_message(string{str, size});
+			on_message(string{str, size});  // TODO: use string_view there
 			return;
 		}
 
