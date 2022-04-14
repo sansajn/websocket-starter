@@ -9,7 +9,7 @@
 
 namespace websocket {
 
-/*! WebSocket client channel implementation.
+/*! WebSocket client 1:1 channel implementation.
 Implementation allows to connect to server WebSocket and send string messages.
 
 \code
@@ -30,7 +30,7 @@ public:
 	void close();
 
 protected:
-	virtual void on_message(std::string const & msg) {}
+	virtual void on_message(std::string_view msg) {}
 
 private:
 	void connection_handler(GAsyncResult * res);

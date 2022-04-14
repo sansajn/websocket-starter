@@ -1,8 +1,10 @@
+#include <string>
+#include <string_view>
 #include <iostream>
 #include <cassert>
 #include "websocket.hpp"
 
-using std::string, std::cout;
+using std::string, std::string_view, std::cout;
 
 namespace websocket {
 
@@ -95,7 +97,7 @@ void client_channel::message_handler(SoupWebsocketDataType data_type, GBytes con
 			gsize size = 0;
 			gchar * str = (gchar *)g_bytes_get_data((GBytes *)message, &size);
 			assert(str);
-			on_message(string{str, size});
+			on_message(string_view{str, size});
 			return;
 		}
 

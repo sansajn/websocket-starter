@@ -2,13 +2,14 @@
 WebSocket channel support */
 #pragma once
 #include <string>
+#include <string_view>
 #include <chrono>
 #include <future>
 #include "websocket.hpp"
 
 //! Sync WebSocket channel receiver implementation.
 struct channel_receiver_sync : public websocket::client_channel {
-	void on_message(std::string const & msg) override {
+	void on_message(std::string_view msg) override {
 		result = msg;
 	}
 
@@ -55,10 +56,10 @@ struct channel_receiver_async : public websocket::client_channel {
 	bool received = false;
 
 private:
-	void on_message(std::string const & msg) override {
+	void on_message(std::string_view msg) override {
 		websocket::client_channel::on_message(msg);
 		received = true;
-		_result.set_value(msg);
+		_result.set_value(std::string{msg});
 	}
 
 	promise_type & _result;
@@ -81,9 +82,9 @@ struct channel_receiver_multi_async : public websocket::client_channel {
 	bool received = false;
 
 private:
-	void on_message(std::string const & msg) override {
+	void on_message(std::string_view msg) override {
 		websocket::client_channel::on_message(msg);
-		_received.push_back(msg);
+		_received.push_back(std::string{msg});
 		if (size(_received) == _expected_message_count) {
 			_result.set_value(move(_received));
 			received = true;
@@ -94,4 +95,3 @@ private:
 	size_t const _expected_message_count;
 	result_type _received;
 };
-
