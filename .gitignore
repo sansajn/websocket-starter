@@ -3,6 +3,13 @@
 /test
 /eserv
 
+# analyze
+*.gcno
+*.gcda
+/junit.report
+/cppcheck.report
+/coverage.report
+
 # creator project files
 /.qtc_clangd
 /*.cflags
