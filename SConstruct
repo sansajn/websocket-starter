@@ -12,6 +12,10 @@ if GetOption('test_coverage'):
 	cpp17.Append(CXXFLAGS = ['-fprofile-arcs', '-ftest-coverage'],
 		LIBS = ['gcov'])
 
+# enable GCC color output
+import os
+if 'TERM' in os.environ:
+	cpp17['ENV']['TERM'] = os.environ['TERM']
 
 common_objs = cpp17.Object(['websocket.cpp', 'glib_event_loop.cpp', 'echo_server.cpp'])
 
