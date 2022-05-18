@@ -16,8 +16,7 @@ public:
 	void quit();
 
 private:
-	/*! Install `<ctr+c>` (SIGINT) interrupt handler. */
-	void install_interrupt_handler();
+	void install_interrupt_handler();  //!< Install `<ctr+c>` (SIGINT) interrupt handler.
 
 	GMainContext * _ctx;
 	GMainLoop * _loop;

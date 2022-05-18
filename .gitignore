@@ -2,6 +2,8 @@
 *.o
 /test
 /eserv
+/seserv
+/sclient
 
 # analyze
 *.gcno

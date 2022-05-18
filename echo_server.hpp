@@ -5,9 +5,12 @@
 #include "websocket.hpp"
 
 class echo_server : public websocket::server_channel {
+public:
+	using websocket::server_channel::server_channel;  // reuse constructors
+
 protected:
-	void on_message(std::string const & msg) override {
-		send_all(msg);
+	void on_message(std::string_view msg) override {
+		send_all(std::string(msg));
 	}
 };
 
