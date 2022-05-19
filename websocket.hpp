@@ -41,7 +41,6 @@ public:
 	void connect(std::string const & address, connected_handler && handler);
 	void reconnect();
 	void send(std::string const & msg);
-	void close();
 
 protected:
 	virtual void on_message(std::string_view msg) {}
@@ -49,10 +48,12 @@ protected:
 private:
 	void connection_handler(GAsyncResult * res);
 	void message_handler(SoupWebsocketDataType data_type, GBytes const * message);
+	void closed_handler();
 
 	// libsoup callback handlers
-	static void connection_handler_cb(SoupSession * session, GAsyncResult * res, gpointer data);
-	static void message_handler_cb(SoupWebsocketConnection * conn, SoupWebsocketDataType type, GBytes * message, gpointer data);
+	static void connection_handler_cb(SoupSession * session, GAsyncResult * res, gpointer self);
+	static void message_handler_cb(SoupWebsocketConnection * conn, SoupWebsocketDataType type, GBytes * message, gpointer self);
+	static void closed_handler_cb(SoupWebsocketConnection * conn, gpointer self);
 
 	SoupSession * _sess;
 	SoupWebsocketConnection * _conn;

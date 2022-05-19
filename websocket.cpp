@@ -41,20 +41,12 @@ client_channel::client_channel(path const & ssl_cert_file)
 }
 
 client_channel::~client_channel() {
-	close();
-}
-
-void client_channel::close() {
-	if (_conn) {
-		soup_websocket_connection_close(_conn, SOUP_WEBSOCKET_CLOSE_GOING_AWAY, "closing client channel");
-		g_object_unref(G_OBJECT(_conn));
-		_conn = nullptr;
-	}
+	if (_conn)
+		g_clear_object(&_conn);  // this will not call closed handler
 
 	if (_sess) {
 		soup_session_abort(_sess);
-		g_object_unref(G_OBJECT(_sess));
-		_sess = nullptr;
+		g_clear_object(&_sess);
 	}
 }
 
@@ -74,6 +66,9 @@ void client_channel::connect(string const & address, connected_handler && handle
 void client_channel::reconnect() {
 	assert(_sess);
 
+	if (_conn)
+		g_clear_object(&_conn);  // this close connection without calling closed handler
+
 	SoupMessage * msg = soup_message_new(SOUP_METHOD_GET, _address.c_str());
 
 	soup_session_websocket_connect_async(_sess, msg, nullptr, nullptr, nullptr,
@@ -88,7 +83,7 @@ void client_channel::send(string const & msg) {
 }
 
 void client_channel::connection_handler(GAsyncResult * res) {
-	//	assert(!_conn);  // FIXME: we have resource leak there, _conn must be properly closed
+	assert(!_conn);
 
 	GError * error = nullptr;
 	_conn = soup_session_websocket_connect_finish(_sess, res, &error);
@@ -100,11 +95,9 @@ void client_channel::connection_handler(GAsyncResult * res) {
 	}
 	assert(_conn);
 
-	g_object_ref(G_OBJECT(_conn));
-
 	// handle signals
 	g_signal_connect(_conn, "message", G_CALLBACK(message_handler_cb), this);
-	g_signal_connect(_conn, "closed", G_CALLBACK(detail::on_close), nullptr);
+	g_signal_connect(_conn, "closed", G_CALLBACK(closed_handler_cb), this);
 
 	_connected_handler(std::error_code{});
 }
@@ -129,20 +122,27 @@ void client_channel::message_handler(SoupWebsocketDataType data_type, GBytes con
 	}
 }
 
-void client_channel::connection_handler_cb(SoupSession *, GAsyncResult * res,
-	gpointer data) {
+void client_channel::closed_handler() {
+	assert(_conn);
+	g_clear_object(&_conn);
+	assert(!_conn);
+}
 
-	client_channel * p = static_cast<client_channel *>(data);
-	assert(p);
-	p->connection_handler(res);
+void client_channel::connection_handler_cb(SoupSession *, GAsyncResult * res,
+	gpointer self) {
+	assert(self);
+	static_cast<client_channel *>(self)->connection_handler(res);
 }
 
 void client_channel::message_handler_cb(SoupWebsocketConnection *, SoupWebsocketDataType type,
-	GBytes * message, gpointer data) {
+	GBytes * message, gpointer self) {
+	assert(self);
+	static_cast<client_channel *>(self)->message_handler(type, message);
+}
 
-	client_channel * p = static_cast<client_channel *>(data);
-	assert(p);
-	p->message_handler(type, message);
+void client_channel::closed_handler_cb(SoupWebsocketConnection * conn, gpointer self) {
+	assert(self);
+	static_cast<client_channel *>(self)->closed_handler();
 }
 
 
